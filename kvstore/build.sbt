@@ -1,5 +1,5 @@
 course := "reactive"
-assignment := "actorbintree"
+assignment := "kvstore"
 
 testOptions in Test += Tests.Argument(TestFrameworks.JUnit, "-a", "-v", "-s")
 parallelExecution in Test := false
@@ -7,7 +7,6 @@ parallelExecution in Test := false
 val akkaVersion = "2.6.13"
 
 scalaVersion := "2.13.1"
-
 scalacOptions ++= Seq(
   "-feature",
   "-deprecation",
@@ -17,7 +16,7 @@ scalacOptions ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka"        %% "akka-actor"         % akkaVersion,
-  "com.typesafe.akka"        %% "akka-testkit"       % akkaVersion % Test,
-  "com.novocode"             % "junit-interface"     % "0.11"      % Test
+  "com.typesafe.akka"        %% "akka-actor"     % akkaVersion,
+  "com.typesafe.akka"        %% "akka-testkit"   % akkaVersion % Test,
+  "com.novocode"             % "junit-interface" % "0.11"      % Test
 )

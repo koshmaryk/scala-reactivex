@@ -62,7 +62,7 @@ class BinaryTreeSet extends Actor {
   var pendingQueue = Queue.empty[Operation]
 
   // optional
-  def receive: Receive = normal
+  def receive = normal
 
   // optional
   /** Accepts `Operation` and `GC` messages. */
@@ -120,26 +120,26 @@ class BinaryTreeNode(val elem: Int, initiallyRemoved: Boolean = false) extends A
   // optional
   /** Handles `Operation` messages and `CopyTo` requests. */
   val normal: Receive = {
-    case msg @ Contains(req, id, curr) =>
-      if (elem == curr) {
+    case msg @ Contains(req, id, reqElem) =>
+      if (elem == reqElem) {
         req ! ContainsResult(id, !removed)
       } else {
-        val position = if (curr < elem) Left else Right
+        val position = if (reqElem < elem) Left else Right
         subtrees.get(position) match {
-          case Some(tree) => tree ! msg
+          case Some(subtree) => subtree ! msg
           case None => req ! ContainsResult(id, result = false)
         }
       }
-    case msg @ Insert(req, id, curr) =>
-      if (elem == curr) {
+    case msg @ Insert(req, id, reqElem) =>
+      if (elem == reqElem) {
         removed = false
         req ! OperationFinished(id)
       } else {
-        val position = if (curr < elem) Left else Right
+        val position = if (reqElem < elem) Left else Right
         subtrees.get(position) match {
-          case Some(tree) => tree ! msg
+          case Some(subtree) => subtree ! msg
           case None =>
-            subtrees = subtrees.updated(position, context.actorOf(props(curr, initiallyRemoved = false)))
+            subtrees = subtrees.updated(position, context.actorOf(props(reqElem, initiallyRemoved = false)))
             req ! OperationFinished(id)
         }
       }
@@ -148,7 +148,7 @@ class BinaryTreeNode(val elem: Int, initiallyRemoved: Boolean = false) extends A
         removed = true
         req ! OperationFinished(id)
       } else {
-        val position = if (reqElem > elem) Right else Left
+        val position = if (reqElem < elem) Left else Right
         subtrees.get(position) match {
           case Some(subtree) => subtree ! msg
           case None => req ! OperationFinished(id)
