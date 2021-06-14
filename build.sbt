@@ -16,8 +16,10 @@ scalacOptions ++= Seq(
 lazy val async = project
 lazy val actorbintree = project
 lazy val kvstore = project
+lazy val protocols = project
 
 lazy val root = (project in file("."))
   .aggregate(async)
   .aggregate(actorbintree)
   .aggregate(kvstore)
+  .aggregate(protocols)
